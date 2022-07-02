@@ -22,7 +22,7 @@ export default function Collection() {
 			pageType: ShopifyAnalyticsConstants.pageType.collection,
 			resourceId: collection.id,
 		}
-	})
+	});
 
 	return (
 		<Layout>

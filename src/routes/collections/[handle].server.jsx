@@ -17,12 +17,12 @@ export default function Collection() {
 
 	const collection = collectionByHandle;
 
-	useServerAnalytics = ({
+	useServerAnalytics({
 		shopify: {
 			pageType: ShopifyAnalyticsConstants.pageType.collection,
 			resourceId: collection.id,
 		}
-	})
+	});
 
 	return (
 		<Layout>

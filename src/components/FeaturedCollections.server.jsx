@@ -10,7 +10,7 @@ export function FeaturedCollections() {
 
 	return (
 		<div className="md:gap-8 md:p-8 lg:p-12 p-6">
-			<h2 className="text-4xl text-center text-lead font-bold mb-10">Collections</h2>
+			<h2 className="text-4xl text-center text-lead font-bold mb-10">Collections {Oxygen.env.MY_STORE_NAME}</h2>
 			<div className="grid grid-flow-row gap-6 gap-y-6 md:gap-4 lg:gap-6 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
 			 {collections.edges.map((collection) => {
 			 	let coll = collection.node;

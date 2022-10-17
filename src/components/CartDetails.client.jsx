@@ -12,36 +12,47 @@ import {
 } from '@shopify/hydrogen';
 
 export function CartDetails({ onClose }) {
-	const { lines } = useCart();
-
+	const { lines, cost } = useCart();
+	
 	if(lines.length == 0) {
 		return <CartEmpty onClose={onClose}/>;	
 	}
 
 	return (
-		<form className="grid grid-cols-1 grid-rows-[1fr_auto] h-[calc(100vh - 6rem)]">
-			<section className="px-4 pb-4 overflow-auto transition md:mx-12">
-				<ul className="grid gap-6 md:gap-10 overflow-y-scroll">
-					{lines.map((line) => {
-						return (
-							<CartLineProvider key={line.id} line={line}>
-								<CartLineItem />
-							</CartLineProvider>
-						)
-					})}
-				</ul>
-			</section>
-			<section
-		        aria-labelledby="summary-heading"
-		        className="p-4 border-t md:px-12"
-		      >
-		        <h2 id="summary-heading" className="sr-only">
-		          Order summary
-		        </h2>
-		        <OrderSummary />
-		        <CartCheckoutActions />
-		    </section>
-		</form>
+		
+		<>
+			<div 
+				className={` py-2 px-3 rounded border text-sm mx-4 mb-4 md:mx-12 ${cost.totalAmount.amount >= 500 ? "bg-green-300 border-green-800 text-green-800" : " bg-gray-200 border-gray-300 text-gray-800"}`}
+				>
+				{cost.totalAmount.amount >= 500 
+					? (<span><strong>Yayyy!</strong> You got a <strong>Free shipping!</strong></span>) 
+					: (<span>Spend <Money className="inline" data={{currencyCode: cost.totalAmount.currencyCode, amount: (500 - cost.totalAmount.amount).toString()}} />  to get <strong>Free shipping!</strong></span>)
+				}
+			</div>
+			<form className="grid grid-cols-1 grid-rows-[1fr_auto] h-[calc(100vh - 6rem)]">
+				<section className="px-4 pb-4 overflow-auto transition md:mx-12">
+					<ul className="grid gap-6 md:gap-10 overflow-y-auto">
+						{lines.map((line) => {
+							return (
+								<CartLineProvider key={line.id} line={line}>
+									<CartLineItem />
+								</CartLineProvider>
+							)
+						})}
+					</ul>
+				</section>
+				<section
+					aria-labelledby="summary-heading"
+					className="p-4 border-t md:px-12"
+				>
+					<h2 id="summary-heading" className="sr-only">
+					Order summary
+					</h2>
+					<OrderSummary />
+					<CartCheckoutActions />
+				</section>
+			</form>
+		</>
 	);
 }
 
@@ -104,7 +115,9 @@ function CartLineItem() {
 			<div className="flex-shrink-0">
 				<Image
 				  data={merchandise.image}
-				  className="object-cover object-center w-24 h-24 border rounded md:w-28 md:h-28" />
+				  className="object-cover object-center w-24 h-24 border rounded md:w-28 md:h-28"
+				  alt={`Image for ${merchandise.product.title}`}
+				   />
 			</div>
 			<div className="flex justify-between flex-1 ml-4 sm:ml-6">
 				<div className="relative grid gap-1">
@@ -131,13 +144,13 @@ function CartLineItem() {
  			           <button 
  			           	type="button"
  			           	onClick={() => linesRemove(id)}
- 			           	className="h-[40x] w-[40px] border rounded flex justify-center items-center"
+ 			           	className="p-2 border rounded flex justify-center items-center"
  			           	>
  			           		<span className="sr-only">remove</span>
  			           		<svg
 				                xmlns="http://www.w3.org/2000/svg"
 				                viewBox="0 0 20 20"
-				                className="w-[13px] h-[14px]"
+				                className="w-[20px] h-[20px]"
 				              >
 				                <title>Remove</title>
 				                <path

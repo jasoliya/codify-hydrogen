@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 
 function Drawer({open, onClose, children}) {
 	return (
@@ -29,10 +29,10 @@ function Drawer({open, onClose, children}) {
 								leaveFrom="translate-x-0"
 								leaveTo="translate-x-full"
 								>
-								<Dialog.Panel className="max-w-lg transform text-left align-middle shadow-xl transition-all shadow-xl bg-neutral-50">
+								<Dialog.Panel className="max-w-lg transform text-left align-middle transition-all shadow-xl bg-neutral-50">
 									<header className="sticky top-0 flex items-center justify-between px-4 h-24 sm:px-8 md:px-12">
 										<h2 id="cart-contents" className="font-bold text-lg">Cart</h2>
-										<button type="button" className="p-4 m-4 transition text-primary hover:text-primary/50" onClick={onClose}>
+										<button type="button" className="p-4 transition text-primary hover:text-primary/50" onClick={onClose}>
 											<IconClose aria-label="Close panel" />
 										</button>
 									</header>
@@ -50,24 +50,6 @@ function Drawer({open, onClose, children}) {
 Drawer.Title = Dialog.Title;
 
 export { Drawer };
-
-export function useDrawer(openDefault = false) {
-	const[isOpen, setIsOpen] = useState(openDefault);
-
-	function openDrawer() {
-		setIsOpen(true);
-	}
-
-	function closeDrawer() {
-		setIsOpen(false);
-	}
-
-	return {
-		isOpen,
-		openDrawer,
-		closeDrawer
-	}
-}
 
 function IconClose() {
 	return (

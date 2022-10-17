@@ -1,37 +1,49 @@
 import {useUrl, Link, useCart} from '@shopify/hydrogen';
-import {Drawer, useDrawer} from './Drawer.client';
+import {Drawer} from './Drawer.client';
 import {CartDetails} from './CartDetails.client';
+import {Navigation} from './Navigation.client';
+import {useCartUI} from './CartUIProvider.client';
 
-export default function Header({ shop }) {
+export default function Header({ shop, menu }) {
 	const { pathname } = useUrl();
-	const { isOpen, openDrawer, closeDrawer } = useDrawer();
+	const { isCartOpen, openCart, closeCart } = useCartUI();
 
 	const isHome = pathname === '/';
 
 	return (
 		<>
-		<Drawer open={isOpen} onClose={closeDrawer}>
+		<Drawer open={isCartOpen} onClose={closeCart}>
 			<div className="grid">
-				<CartDetails onClose={closeDrawer}/>
+				<CartDetails onClose={closeCart}/>
 			</div>
 		</Drawer>
 		<header className={`flex items-center gap-4 h-16 p-6 sticky backdrop-blur-lg z-40 top-0 justify-between w-full ${
 						isHome ? "bg-black/80 text-white" : "bg-white/80"
 					}`}
 				>
-	    		<div className="flex gap-12">
+	    		<div className="flex gap-12 w-1/6">
 	    			<Link className="font-bold text-2xl" to='/' >
 	    				{shop.name}
 	    			</Link>
 	    		</div>
 
-	    		<button 
-	    			onClick={openDrawer}
-	    			className="relative flex items-center justify-center w-8 h-8"
-	    		>
-	    			<IconBag />
-	    			<CartBadge dark={isHome}/>
-	    		</button>
+	    		<div className="w-4/6">
+	    			<Navigation menu={menu} />
+	    		</div>
+
+	    		<div className="flex justify-end w-1/6">
+					<Link to={'/account/'} className="flex items-center justify-center w-8 h-8 mr-4">
+						<IconAccount dark={isHome}/>
+					</Link>
+
+		    		<button 
+		    			onClick={openCart}
+		    			className="relative flex items-center justify-center w-8 h-8"
+		    		>
+		    			<IconBag />
+		    			<CartBadge dark={isHome}/>
+		    		</button>
+	    		</div>
 	    	</header>
 	    </>
 	)
@@ -70,4 +82,10 @@ function CartBadge({ dark }) {
       <span>{totalQuantity}</span>
     </div>
   );
+}
+
+function IconAccount({ dark }) {
+	return(
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" className={`w-4 h-4 ${ dark ? "fill-white" : "fill-black"}`}><path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"/></svg>
+	)
 }

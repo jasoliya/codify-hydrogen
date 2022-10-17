@@ -1,13 +1,21 @@
+import { useCallback, useState } from 'react';
 import { 
 	ProductOptionsProvider, 
 	MediaFile,
 	useProductOptions,
 	ProductPrice,
 	BuyNowButton,
-	AddToCartButton
+	AddToCartButton,
+	useCart,
+	useUrl,
+	isBrowser
 } from '@shopify/hydrogen';
 
-export default function ProductDetails({ product }) {
+import {useEffect} from 'react';
+
+export default function ProductDetails({ product }) {	
+	const cartAdd = useCart();
+	
 	return (
 		<ProductOptionsProvider data={product}>
 			<section className="w-full grid gap-4 px-6 md:px-8 lg:px-12">
@@ -34,12 +42,66 @@ export default function ProductDetails({ product }) {
 }
 
 function OptionRadio({ name, values }) {
-	const { selectedOptions, setSelectedOption } = useProductOptions();
+	const { options, selectedOptions, setSelectedOption } = useProductOptions();
+	const {pathname, search} = useUrl();
+	const [params, setParams] = useState(new URLSearchParams(search));
+	const [currentOptions, setCurrentOptions] = useState(selectedOptions);
+
+	const handleChange = useCallback(({name, value}) => {
+		setSelectedOption(name,value);
+
+		const selectedOpts = currentOptions;
+
+		if(typeof selectedOpts[name] != 'undefined') selectedOpts[name] = value;
+		setCurrentOptions(selectedOpts);
+
+		if(!params) return;
+
+		for(var key in selectedOpts) {
+			params.set(
+				encodeURIComponent(key.toLowerCase()),
+				encodeURIComponent(selectedOpts[key].toLowerCase()),
+			);
+		}
+		if(isBrowser) {
+			window.history.replaceState(
+				null,
+				'',
+				`${pathname}?${params.toString()}`
+			);
+		}
+	}, [setCurrentOptions, params, pathname]);
+
+	useEffect(() => {
+		options.map(({name, values}) => {
+			if(!params) return;
+			const currentValue = params.get(name.toLowerCase()) || null;
+			if(currentValue) {
+				const matchedValue = values.filter((value) => encodeURIComponent(value.toLowerCase()) === currentValue);
+				if(matchedValue.length) {
+					setSelectedOption(name, matchedValue[0]);
+					const selectedOpts = currentOptions;
+					if(typeof selectedOpts[name] != 'undefined') selectedOpts[name] = matchedValue[0];
+					setCurrentOptions(selectedOpts);
+				}
+			} else {
+				params.set(
+					encodeURIComponent(name.toLocaleLowerCase()),
+					encodeURIComponent(selectedOptions[name].toLocaleLowerCase())
+				);
+				window.history.replaceState(
+					null,
+					'',
+					`${pathname}?${params.toString()}`
+				)
+			}
+		});
+	},[]);
 
 	return (
 		<>
 			{values.map((value) => {
-				const checked = selectedOptions[name] === value;
+				const checked = currentOptions[name] === value;
 				const id = `option-${name}-${value}`;
 
 				return (
@@ -51,7 +113,7 @@ function OptionRadio({ name, values }) {
 							name={`option[${name}]`}
 							value={value}
 							checked={checked}
-							onChange={() => setSelectedOption(name, value)}
+							onChange={() => handleChange({name,value})}
 						/>
 						<div className={`border-b-[2px] py-1 cursor-pointer transition-all-duration-200 ${
 										checked ? "border-gray-500" : "border-nuetral-50"
@@ -116,6 +178,8 @@ function PurchaseMarkup () {
 	const { selectedVariant } = useProductOptions();
 	const isOutOfStock = !selectedVariant?.availableForSale || false;
 
+	const AddToCartText = isOutOfStock ? "Out Of Stock" : "Add to bag";
+
 	return (
 		<>
 			<AddToCartButton
@@ -125,7 +189,7 @@ function PurchaseMarkup () {
 				disabled={isOutOfStock}
 			>
 				<span className="bg-black text-white inline-block rounded-sm text-center py-3 px-6 max-w-xl w-full">
-					{isOutOfStock ? "Out Of Stock" : "Add to bag"}
+					{AddToCartText}
 				</span>
 			</AddToCartButton>
 			{isOutOfStock ? (

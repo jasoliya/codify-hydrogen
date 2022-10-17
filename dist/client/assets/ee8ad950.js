@@ -1,0 +1,2 @@
+import{r as s}from"./index.cf70f272.js";const i={};function d(e,t){const o=i[e];if(o)return o;const r=new Promise((c,a)=>{const n=document.createElement("script");t!=null&&t.module&&(n.type="module"),n.src=e,n.onload=()=>{c(!0)},n.onerror=()=>{a(!1)},document.body.appendChild(n)});return i[e]=r,r}function f(e,t){const[o,r]=s.exports.useState("loading"),c=JSON.stringify(t);return s.exports.useEffect(()=>{async function a(){try{r("loading"),await d(e,t),r("done")}catch{r("error")}}a()},[e,c,t]),o}export{f as u};
+//# sourceMappingURL=ee8ad950.js.map

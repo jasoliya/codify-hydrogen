@@ -31,4 +31,4 @@ To run a local preview of your Hydrogen app in an environment similar to Oxygen,
 
 ```bash
 yarn build
-yarn preview
+yarn preview# codify-hydrogen

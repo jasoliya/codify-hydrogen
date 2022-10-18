@@ -7,10 +7,8 @@ export default function Home() {
   return (
   	<Layout>
   		<Suspense>
-
 			<SlideShow />
 	  		<FeaturedCollections />
-			
 	  	</Suspense>
     </Layout>
   );

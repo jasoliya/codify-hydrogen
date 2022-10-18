@@ -8,8 +8,8 @@ export default defineConfig({
   shopify: {
   	defaultLanguageCode: 'EN',
     defaultCountryCode: 'AU',
-    storeDomain: 'sample-store-1331.myshopify.com',
-    storefrontToken: '5d6b9cd59b284d0b271ea5c726a54dc3',
+    storeDomain: 'georgiemane-dev.myshopify.com',
+    storefrontToken: 'ceebd181fea54ae9c5dec117ee96cc5f',
     storefrontApiVersion: '2022-07',
   },
   session: CookieSessionStorage('__session', {

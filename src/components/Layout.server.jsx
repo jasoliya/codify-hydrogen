@@ -9,7 +9,7 @@ export function Layout({children}) {
 		query: SHOP_QUERY,
 		cache: CacheLong(),
 		variables: {
-			MenuHandle: 'main-menu'
+			MenuHandle: 'hydrogen-menu'
 		}
 	})
 

@@ -22,9 +22,7 @@ export default function Header({ shop, menu }) {
 					}`}
 				>
 	    		<div className="flex gap-12 w-1/6">
-	    			<Link className="font-bold text-2xl" to='/' >
-	    				{shop.name}
-	    			</Link>
+	    			<Link className="font-bold text-2xl" to='/' >georgiemane</Link>
 	    		</div>
 
 	    		<div className="w-4/6">
